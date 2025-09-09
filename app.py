@@ -54,6 +54,38 @@ def handle_texts():
         except Exception as e:
             app.logger.error(f"Error writing data file: {e}")
             return jsonify({"error": "Could not save data."}), 500
+        
+# レシピを保存するJSONファイル
+RECIPES_FILE = 'recipes.json'
+
+def load_recipes():
+    if os.path.exists(RECIPES_FILE):
+        with open(RECIPES_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return []
+
+def save_recipes(recipes):
+    with open(RECIPES_FILE, 'w', encoding='utf-8') as f:
+        json.dump(recipes, f, ensure_ascii=False, indent=2)
+
+# レシピ管理用API
+@app.route('/api/recipes', methods=['GET', 'POST'])
+def handle_recipes():
+    if request.method == 'GET':
+        recipes = load_recipes()
+        return jsonify(recipes)
+
+    elif request.method == 'POST':
+        data = request.get_json()
+        if not data or "recipe_name" not in data:
+            return jsonify({"error": "Invalid data"}), 400
+
+        recipes = load_recipes()
+        recipes.append(data)
+        save_recipes(recipes)
+
+        return jsonify({"message": "レシピを保存しました！"})
+
 
 # スクリプトが直接実行された場合にのみ開発サーバーを起動
 if __name__ == '__main__':
