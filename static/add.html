@@ -27,31 +27,38 @@
 </form>
 
 <script>
-document.getElementById("recipe-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const recipe = {
-        recipe_name: document.getElementById("recipe_name").value,
-        ingredients: document.getElementById("ingredients").value,
-        instructions: document.getElementById("instructions").value
-    };
-
-    const res = await fetch("/api/recipes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(recipe)
+    document.getElementById("recipe-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+    
+        const recipe = {
+            recipe_name: document.getElementById("recipe_name").value,
+            ingredients: document.getElementById("ingredients").value,
+            instructions: document.getElementById("instructions").value
+        };
+    
+        try {
+            const response = await fetch("/api/recipes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(recipe)
+            });
+    
+            const result = await response.json();
+            alert(result.message || "保存に失敗しました");
+    
+            if (response.ok) {
+                // 成功したらトップページに戻る
+                window.location.href = "/";
+            }
+        } catch (error) {
+            console.error("レシピの追加に失敗しました:", error);
+            alert("エラーが発生しました。通信状態を確認してもう一度お試しください。");
+        }
     });
-
-    const result = await res.json();
-    alert(result.message || "保存に失敗しました");
-
-    // 入力欄をクリア
-    e.target.reset();
-});
 </script>
 
-        <br>
-        <a href="/" class="back-button">トップページに戻る</a>
     </div>
+    <br>
+    <a href="/" class="back-button">トップページに戻る</a>
 </body>
 </html>

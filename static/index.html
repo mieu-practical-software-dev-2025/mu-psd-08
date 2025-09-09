@@ -16,5 +16,56 @@
         <a href="/search" class="nav-button">レシピ検索</a>
     </div>
     <h1>おすすめレシピ</h1>
+
+    <div class="container search-results" id="recipe-list-container">
+        <!-- JavaScriptによってレシピがここに読み込まれます -->
+    </div>
+
+    <template id="recipe-template">
+        <li>
+            <h3 class="recipe-name"></h3>
+            <h4>材料:</h4>
+            <p class="recipe-ingredients"></p>
+            <h4>作り方:</h4>
+            <p class="recipe-instructions"></p>
+        </li>
+    </template>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('recipe-list-container');
+            try {
+                const response = await fetch('/api/recipes');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const recipes = await response.json();
+
+                if (recipes.length === 0) {
+                    container.innerHTML = '<p>登録されているレシピはまだありません。「レシピ追加」から最初のレシピを登録してみましょう！</p>';
+                    return;
+                }
+
+                const template = document.getElementById('recipe-template');
+                const ul = document.createElement('ul');
+                recipes.reverse().forEach(recipe => { // 新しいレシピが上に表示されるように逆順にする
+                    const clone = template.content.cloneNode(true); // テンプレートを複製
+                    const formatText = (text) => (text || '').replace(/\n/g, '<br>');
+ 
+                    // テンプレート内の要素にデータを設定
+                    clone.querySelector('.recipe-name').textContent = recipe.recipe_name;
+                    clone.querySelector('.recipe-ingredients').innerHTML = formatText(recipe.ingredients);
+                    clone.querySelector('.recipe-instructions').innerHTML = formatText(recipe.instructions);
+ 
+                    ul.appendChild(clone);
+                });
+                container.appendChild(ul);
+
+            } catch (error) {
+                console.error('レシピの取得に失敗しました:', error);
+                container.innerHTML = '<p>レシピの読み込み中にエラーが発生しました。</p>';
+            }
+        });
+    </script>
 </body>
 </html>
