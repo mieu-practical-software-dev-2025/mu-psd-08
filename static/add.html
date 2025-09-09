@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>レシピ追加</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
     <div class="header">
@@ -12,53 +13,62 @@
     </div>
 
     <h1>レシピ追加</h1>
-    <div class="container">
-        <form id="recipe-form">
-    <label for="recipe_name">料理名:</label>
-    <input type="text" id="recipe_name" name="recipe_name" required>
+    <div id="app" class="container">
+        <form @submit.prevent="addRecipe">
+            <label for="recipe_name">料理名:</label>
+            <input type="text" id="recipe_name" v-model="recipe.recipe_name" required>
 
-    <label for="ingredients">材料:</label>
-    <textarea id="ingredients" name="ingredients" rows="5" required></textarea>
+            <label for="ingredients">材料:</label>
+            <textarea id="ingredients" v-model="recipe.ingredients" rows="5" required></textarea>
 
-    <label for="instructions">作り方:</label>
-    <textarea id="instructions" name="instructions" rows="10" required></textarea>
+            <label for="instructions">作り方:</label>
+            <textarea id="instructions" v-model="recipe.instructions" rows="10" required></textarea>
 
-    <button type="submit">レシピを追加</button>
-</form>
-
-<script>
-    document.getElementById("recipe-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-    
-        const recipe = {
-            recipe_name: document.getElementById("recipe_name").value,
-            ingredients: document.getElementById("ingredients").value,
-            instructions: document.getElementById("instructions").value
-        };
-    
-        try {
-            const response = await fetch("/api/recipes", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(recipe)
-            });
-    
-            const result = await response.json();
-            alert(result.message || "保存に失敗しました");
-    
-            if (response.ok) {
-                // 成功したらトップページに戻る
-                window.location.href = "/";
-            }
-        } catch (error) {
-            console.error("レシピの追加に失敗しました:", error);
-            alert("エラーが発生しました。通信状態を確認してもう一度お試しください。");
-        }
-    });
-</script>
-
+            <button type="submit" :disabled="isSubmitting">
+                {{ isSubmitting ? '追加中...' : 'レシピを追加' }}
+            </button>
+        </form>
     </div>
     <br>
     <a href="/" class="back-button">トップページに戻る</a>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    recipe: {
+                        recipe_name: '',
+                        ingredients: '',
+                        instructions: ''
+                    },
+                    isSubmitting: false
+                };
+            },
+            methods: {
+                async addRecipe() {
+                    this.isSubmitting = true;
+                    try {
+                        const response = await fetch('/api/recipes', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.recipe)
+                        });
+                        const result = await response.json();
+                        alert(result.message || '保存に失敗しました');
+                        if (response.ok) {
+                            window.location.href = '/';
+                        }
+                    } catch (error) {
+                        console.error('レシピの追加に失敗しました:', error);
+                        alert('エラーが発生しました。通信状態を確認してもう一度お試しください。');
+                    } finally {
+                        this.isSubmitting = false;
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
 </body>
 </html>

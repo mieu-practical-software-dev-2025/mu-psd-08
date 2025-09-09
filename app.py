@@ -73,7 +73,18 @@ def save_recipes(recipes):
 def handle_recipes():
     if request.method == 'GET':
         recipes = load_recipes()
-        return jsonify(recipes)
+        keyword = request.args.get('keyword')
+        if keyword:
+            # キーワードでレシピをフィルタリング
+            keyword = keyword.lower()
+            filtered_recipes = [
+                recipe for recipe in recipes
+                if keyword in recipe.get('recipe_name', '').lower() or
+                   keyword in recipe.get('ingredients', '').lower() or
+                   keyword in recipe.get('instructions', '').lower()
+            ]
+            return jsonify(filtered_recipes)
+        return jsonify(recipes) # キーワードがなければ全件返す
 
     elif request.method == 'POST':
         data = request.get_json()

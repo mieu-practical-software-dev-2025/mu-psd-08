@@ -5,21 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>レシピ検索</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
     <div class="header">
         <a href="/" class="logo">Recipe Manager</a>
     </div>
 
-    <h1>レシピ検索</h1>
-    <div class="container">
-        <form action="/search" method="get">
-            <label for="keyword">検索キーワード:</label>
-            <input type="text" id="keyword" name="keyword" placeholder="料理名や材料で検索..." required>
-            <button type="submit">検索</button>
-        </form>
-        <br>
-        <a href="/" class="back-button">トップページに戻る</a>
+    <div id="app">
+        <h1>レシピ検索</h1>
+        <div class="container">
+            <form @submit.prevent="searchRecipes">
+                <label for="keyword">検索キーワード:</label>
+                <input type="text" id="keyword" v-model="keyword" placeholder="料理名や材料で検索..." required>
+                <button type="submit" :disabled="loading">
+                    {{ loading ? '検索中...' : '検索' }}
+                </button>
+            </form>
+            <br>
+            <a href="/" class="back-button">トップページに戻る</a>
+        </div>
+
+        <!-- 検索結果表示エリア -->
+        <div v-if="searched" class="container search-results">
+            <h2>検索結果</h2>
+            <p v-if="loading">検索しています...</p>
+            <p v-if="error">{{ error }}</p>
+            <div v-if="!loading && !error">
+                <p v-if="results.length === 0">
+                    「{{ searchedKeyword }}」に一致するレシピは見つかりませんでした。
+                </p>
+                <ul v-else>
+                    <li v-for="recipe in results" :key="recipe.recipe_name">
+                        <h3>{{ recipe.recipe_name }}</h3>
+                        <h4>材料:</h4>
+                        <p v-html="formatText(recipe.ingredients)"></p>
+                        <h4>作り方:</h4>
+                        <p v-html="formatText(recipe.instructions)"></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    keyword: '',
+                    searchedKeyword: '',
+                    results: [],
+                    loading: false,
+                    error: null,
+                    searched: false // 検索が実行されたかどうかを追跡
+                };
+            },
+            methods: {
+                formatText(text) {
+                    return (text || '').replace(/\n/g, '<br>');
+                },
+                async searchRecipes() {
+                    if (!this.keyword.trim()) return;
+                    this.loading = true;
+                    this.searched = true;
+                    this.error = null;
+                    this.searchedKeyword = this.keyword;
+                    try {
+                        const response = await fetch(`/api/recipes?keyword=${encodeURIComponent(this.keyword)}`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        this.results = await response.json();
+                    } catch (e) {
+                        console.error('レシピの検索に失敗しました:', e);
+                        this.error = 'レシピの検索中にエラーが発生しました。';
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
 </body>
 </html>
