@@ -1,0 +1,181 @@
+body {
+    /* 
+     * 背景画像を指定します。
+     * static/images/background.jpg というパスにある画像を指定しています。
+     */
+    background-image: url('images/background.jpg');
+    background-size: cover; /* 画面全体を覆うように画像を拡大・縮小します */
+    background-repeat: no-repeat; /* 画像を繰り返し表示しません */
+    background-attachment: fixed; /* スクロールしても背景画像を固定します */
+    background-position: center; /* 画像を中央に配置します */
+    font-family: sans-serif; /* 可読性のためにフォントを指定 */
+    padding-top: 60px; /* 固定ヘッダーの後ろにコンテンツが隠れないように調整 */
+}
+
+/* index.htmlのh1を中央揃えに */
+body > h1 {
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* ページ上部の帯のスタイル*/
+.header {
+    width: 100%;
+    height: 50px;
+    background-color: #fefbf8; /* 好きな色 */
+    color: black;
+    display: flex;
+    align-items: center; /* 縦方向中央 */
+    padding: 0 20px;
+    position: fixed; /* 上部に固定 */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* ロゴのボタンスタイル */
+.logo {
+    display: inline-block;
+    padding: 5px 5px;
+    margin: 5px 5px; /* ボタンの上下左右に50pxの余白を追加 */
+    font-size: 28px;
+    color: black;
+    background-color: #fefbf8;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: Impact, sans-serif;
+}
+
+
+/* index.htmlのボタンスタイル */
+.nav-button {
+    display: inline-block;
+    padding: 30px 60px;
+    margin: 50px 50px; /* ボタンの上下左右に50pxの余白を追加 */
+    font-size: 47px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+/* トップページに戻るボタンのスタイル */
+.back-button {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+.nav-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+
+/* フォームやコンテンツを囲むコンテナのスタイル */
+.container {
+    background-color: rgba(255, 255, 255, 0.9); /* 背景を少し透過した白に */
+    padding: 20px 40px;
+    border-radius: 8px;
+    max-width: 700px; /* コンテナの最大幅を指定 */
+    margin: 30px auto; /* 上下にマージン、左右は自動で中央揃え */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* フォーム内のラベルのスタイル */
+form label {
+    font-weight: bold;
+    margin-top: 15px;
+    display: block; /* ラベルをブロック要素にして改行 */
+}
+
+/* テキスト入力欄とテキストエリアの共通スタイル */
+form input[type="text"],
+form textarea {
+    width: 100%; /* 幅を親要素いっぱいに */
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* paddingとborderをwidthに含める */
+    font-size: 16px;
+}
+
+/* テキストエリアは縦方向のみリサイズ可能に */
+form textarea {
+    resize: vertical;
+}
+
+/* 送信ボタンのスタイル */
+form button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: #28a745; /* ボタンの色を緑に */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+form button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* search.html の検索ボタンのスタイル */
+.search-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: #007bff; /* ボタンの色を青に */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+/* 検索結果のスタイル */
+.search-results {
+    margin-top: 30px;
+}
+
+.search-results ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.search-results li {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+}

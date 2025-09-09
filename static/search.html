@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レシピ検索</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="header">
+        <a href="/" class="logo">Recipe Manager</a>
+    </div>
+
+    <h1>レシピ検索</h1>
+    <div class="container">
+        <form action="/search" method="get">
+            <label for="keyword">検索キーワード:</label>
+            <input type="text" id="keyword" name="keyword" placeholder="料理名や材料で検索..." required>
+            <button type="submit">検索</button>
+        </form>
+        <br>
+        <a href="/" class="back-button">トップページに戻る</a>
+    </div>
+</body>
+</html>

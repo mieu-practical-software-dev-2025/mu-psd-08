@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レシピ追加</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="header">
+        <a href="/" class="logo">Recipe Manager</a>
+    </div>
+
+    <h1>レシピ追加</h1>
+    <div class="container">
+        <form action="/add" method="post">
+            <label for="recipe_name">料理名:</label>
+            <input type="text" id="recipe_name" name="recipe_name" required>
+    
+            <label for="ingredients">材料:</label>
+            <textarea id="ingredients" name="ingredients" rows="5" required></textarea>
+    
+            <label for="instructions">作り方:</label>
+            <textarea id="instructions" name="instructions" rows="10" required></textarea>
+    
+            <button type="submit">レシピを追加</button>
+        </form>
+        <br>
+        <a href="/" class="back-button">トップページに戻る</a>
+    </div>
+</body>
+</html>
