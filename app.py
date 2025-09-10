@@ -2,14 +2,11 @@ import os
 import json
 import uuid
 from flask import Flask, request, jsonify, send_from_directory
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
 from dotenv import load_dotenv
 
 # .envファイルから環境変数を読み込む
 load_dotenv()
-
-# データ保存用のファイルパス
-DATA_FILE = 'data.json'
 
 # Flaskアプリケーションのインスタンスを作成
 app = Flask(__name__)
@@ -22,35 +19,6 @@ client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPEN
 @app.route('/')
 def index():
     return send_from_directory(app.static_folder, 'index.html')
-
-
-# テキストデータを取得・保存するためのAPIエンドポイント
-@app.route('/api/texts', methods=['GET', 'POST'])
-def handle_texts():
-    if request.method == 'GET':
-        # GETリクエスト: 保存されているテキストデータを返す
-        try:
-            if os.path.exists(DATA_FILE):
-                with open(DATA_FILE, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                return jsonify(data)
-            else:
-                # ファイルが存在しない場合は空のリストを返す
-                return jsonify([])
-        except Exception as e:
-            app.logger.error(f"Error reading data file: {e}")
-            return jsonify({"error": "Could not read data."}), 500
-
-    elif request.method == 'POST':
-        # POSTリクエスト: 送られてきたテキストデータをファイルに保存する
-        data = request.get_json()
-        try:
-            with open(DATA_FILE, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-            return jsonify({"message": "Data saved successfully."})
-        except Exception as e:
-            app.logger.error(f"Error writing data file: {e}")
-            return jsonify({"error": "Could not save data."}), 500
         
 # レシピを保存するJSONファイル
 RECIPES_FILE = 'recipes.json'
@@ -128,7 +96,7 @@ def generate_recipe_api():
     try:
         # AIに渡すプロンプトを作成
         prompt = f"""
-        以下の材料を使った、家庭で簡単に作れるレシピを考えてください。
+        以下の料理について、家庭で簡単に作れるレシピを調べてください。
         回答は必ず以下のJSON形式で、キーも日本語で出力してください。
 
         {{
@@ -154,6 +122,9 @@ def generate_recipe_api():
         response_content = completion.choices[0].message.content
         recipe_data = json.loads(response_content)
         return jsonify(recipe_data)
+    except RateLimitError as e:
+        app.logger.warning(f"Rate limit exceeded: {e}")
+        return jsonify({"error": "リクエストが多すぎます。少し時間をおいてから再度お試しください。"}), 429
     except Exception as e:
         app.logger.error(f"Error generating recipe: {e}")
         return jsonify({"error": "AIとの通信中にエラーが発生しました。"}), 500

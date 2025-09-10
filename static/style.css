@@ -12,11 +12,11 @@ body {
     padding-top: 60px; /* 固定ヘッダーの後ろにコンテンツが隠れないように調整 */
 }
 
-/* index.htmlのh1を中央揃えに */
-body > h1 {
+/* ページのメインタイトル(h1)のスタイル */
+h1 {
     text-align: center;
     color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* ページ上部の帯のスタイル*/
@@ -58,7 +58,7 @@ body > h1 {
     margin: 50px 50px; /* ボタンの上下左右に50pxの余白を追加 */
     font-size: 47px;
     color: white;
-    background-color: #007bff;
+    background-color: #79AC78; /* 背景に合う緑色に変更 */
     border: none;
     border-radius: 5px;
     text-align: center;
@@ -67,16 +67,19 @@ body > h1 {
     width: 250px;
 }
 .nav-button:hover {
-    background-color: #0056b3;
+    background-color: #618264; /* 少し暗い緑色に変更 */
 }
 
 /* トップページに戻るボタンのスタイル */
 .back-button {
-    display: inline-block;
-    padding: 15px 30px;
-    font-size: 16px;
+    display: block; /* ブロック要素にして中央揃え */
+    width: 280px; /* ボタンの幅を固定 */
+    margin: 40px auto; /* 上下に余白、左右は自動で中央揃え */
+    padding: 18px 0; /* 上下のパディングを増やす */
+    font-size: 18px; /* 文字を大きくする */
+    font-weight: bold; /* 文字を太くする */
     color: white;
-    background-color: #007bff;
+    background-color: #79AC78; /* 背景に合う緑色に変更 */
     border: none;
     border-radius: 5px;
     text-align: center;
@@ -84,7 +87,7 @@ body > h1 {
     cursor: pointer;
 }
 .back-button:hover {
-    background-color: #0056b3;
+    background-color: #618264; /* 少し暗い緑色に変更 */
 }
 
 .nav-container {
@@ -101,6 +104,12 @@ body > h1 {
     max-width: 700px; /* コンテナの最大幅を指定 */
     margin: 30px auto; /* 上下にマージン、左右は自動で中央揃え */
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* コンテナ内のh1は背景が白なので、文字色を濃くする */
+.container h1 {
+    color: #333;
+    text-shadow: none;
 }
 
 /* フォーム内のラベルのスタイル */
@@ -132,8 +141,8 @@ form button[type="submit"] {
     width: 100%;
     padding: 12px;
     margin-top: 20px;
-    background-color: #28a745; /* ボタンの色を緑に */
-    color: white;
+    background-color: #ffcb69; 
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -141,26 +150,13 @@ form button[type="submit"] {
     font-weight: bold;
 }
 
-form button[type="submit"]:hover {
-    background-color: #218838;
+form button[type="submit"]:hover:not(:disabled) {
+    background-color: #f0b446; 
 }
 
-/* search.html の検索ボタンのスタイル */
-.search-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 20px;
-    background-color: #007bff; /* ボタンの色を青に */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.search-button:hover {
-    background-color: #0056b3;
+form button[type="submit"]:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
 }
 
 /* 検索結果のスタイル */
@@ -203,4 +199,27 @@ form button[type="submit"]:hover {
 
 .delete-button:hover {
     opacity: 1;
+}
+
+/* 保存ボタンのスタイル */
+.save-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: #ffc04b; /* ボタンの色を統一 */
+    color: black; /* 文字色を統一 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.save-button:hover:not(:disabled) {
+    background-color: #f0b446; /* 少し暗いオレンジに変更 */
+}
+
+.save-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
 }
