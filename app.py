@@ -14,18 +14,6 @@ app = Flask(__name__)
 def index():
     return send_from_directory(app.static_folder, 'index.html')
 
-# URL:/add に対して、static/add.htmlを表示して
-# レシピ追加ページをホストする
-@app.route('/add')
-def add():
-    return send_from_directory(app.static_folder, 'add.html')
-
-# URL:/ に対して、static/search.htmlを表示して
-# レシピ検索ページをホストする
-@app.route('/search')
-def search():
-    return send_from_directory(app.static_folder, 'search.html')
-
 
 # テキストデータを取得・保存するためのAPIエンドポイント
 @app.route('/api/texts', methods=['GET', 'POST'])

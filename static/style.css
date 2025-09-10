@@ -54,7 +54,7 @@ body > h1 {
 /* index.htmlのボタンスタイル */
 .nav-button {
     display: inline-block;
-    padding: 30px 60px;
+    padding: 30px 30px;
     margin: 50px 50px; /* ボタンの上下左右に50pxの余白を追加 */
     font-size: 47px;
     color: white;
@@ -64,6 +64,7 @@ body > h1 {
     text-align: center;
     text-decoration: none;
     cursor: pointer;
+    width: 250px;
 }
 .nav-button:hover {
     background-color: #0056b3;
