@@ -179,4 +179,28 @@ form button[type="submit"]:hover {
     border-radius: 5px;
     padding: 15px;
     margin-bottom: 15px;
+    position: relative; /* 削除ボタンの基準位置にする */
+}
+
+/* 削除ボタンのスタイル */
+.delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.delete-button:hover {
+    opacity: 1;
 }

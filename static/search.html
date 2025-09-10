@@ -36,8 +36,9 @@
                     「{{ searchedKeyword }}」に一致するレシピは見つかりませんでした。
                 </p>
                 <ul v-else>
-                    <li v-for="recipe in results" :key="recipe.recipe_name">
+                    <li v-for="(recipe, index) in results" :key="recipe.id || index">
                         <h3>{{ recipe.recipe_name }}</h3>
+                        <button v-if="recipe.id" @click="deleteRecipe(recipe.id, index)" class="delete-button" title="削除">×</button>
                         <h4>材料:</h4>
                         <p v-html="formatText(recipe.ingredients)"></p>
                         <h4>作り方:</h4>
@@ -65,6 +66,23 @@
             methods: {
                 formatText(text) {
                     return (text || '').replace(/\n/g, '<br>');
+                },
+                async deleteRecipe(recipeId, index) {
+                    if (!confirm('このレシピを本当に削除しますか？')) {
+                        return;
+                    }
+                    try {
+                        const response = await fetch(`/api/recipes/${recipeId}`, {
+                            method: 'DELETE'
+                        });
+                        if (!response.ok) {
+                            throw new Error('削除に失敗しました。');
+                        }
+                        // 画面のリストからレシピを削除
+                        this.results.splice(index, 1);
+                    } catch (e) {
+                        alert(e.message);
+                    }
                 },
                 async searchRecipes() {
                     if (!this.keyword.trim()) return;

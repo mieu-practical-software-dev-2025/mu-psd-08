@@ -5,26 +5,100 @@
     <title>AI Recipe - レシピ</title>
     <meta name="description" content="AIが生成したレシピを紹介します。">
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
     <div class="header">
         <a href="/" class="logo">Recipe Manager</a>
     </div>
 
-    <div id="recipe" class="container">
+    <div id="app">
+        <div class="container">
+            <h1>AIレシピ生成</h1>
+            <form @submit.prevent="generateRecipe">
+                <label for="ingredients">使いたい材料を入力してください:</label>
+                <textarea id="ingredients" v-model="ingredients" rows="3" placeholder="例：鶏肉、玉ねぎ、トマト缶" required></textarea>
+                
+                <button type="submit" :disabled="loading">
+                    {{ loading ? '生成中...' : 'レシピを生成' }}
+                </button>
+            </form>
+        </div>
 
+        <!-- 結果表示エリア -->
+        <div v-if="loading" class="container search-results">
+            <p>AIがレシピを考えています...</p>
+        </div>
+        
+        <div v-if="error" class="container search-results">
+            <p style="color: red;">{{ error }}</p>
+        </div>
 
-        <main>
-            <section>
-                <h2>AIが生成したレシピ</h2>
-                <p>ここにAIが生成したレシピの詳細が表示されます。</p>
-                <!-- 今後、レシピのコンテンツをここに追加します。 -->
-            </section>
-
-        </main>
+        <div v-if="recipe" class="container search-results">
+            <h2>生成されたレシピ</h2>
+            <ul>
+                <li>
+                    <h3>{{ recipe.recipe_name }}</h3>
+                    <h4>材料:</h4>
+                    <p v-html="formatText(recipe.ingredients)"></p>
+                    <h4>作り方:</h4>
+                    <p v-html="formatText(recipe.instructions)"></p>
+                </li>
+            </ul>
+        </div>
     </div>
-
+    <br>
     <a href="/" class="back-button">トップページに戻る</a>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    ingredients: '',
+                    recipe: null,
+                    loading: false,
+                    error: null
+                };
+            },
+            methods: {
+                formatText(text) {
+                    return (text || '').replace(/\n/g, '<br>');
+                },
+                async generateRecipe() {
+                    if (!this.ingredients.trim()) return;
+                    this.loading = true;
+                    this.error = null;
+                    this.recipe = null;
+                    
+                    try {
+                        const response = await fetch('/api/generate-recipe', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ ingredients: this.ingredients })
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(data.error || `HTTP error! status: ${response.status}`);
+                        }
+
+                        this.recipe = data;
+
+                    } catch (e) {
+                        console.error('レシピの生成に失敗しました:', e);
+                        this.error = e.message || 'レシピの生成中に不明なエラーが発生しました。';
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
 
 </body>
 </html>
