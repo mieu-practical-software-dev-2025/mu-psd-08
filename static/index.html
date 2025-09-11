@@ -59,7 +59,10 @@
             },
             methods: {
                 formatText(text) {
-                    return (text || '').replace(/\n/g, '<br>');
+                    if (!text) return '';
+                    if (Array.isArray(text)) text = text.join('\n');
+                    else if (typeof text !== 'string') text = String(text);
+                    return text.replace(/\n/g, '<br>');
                 },
                 async deleteRecipe(recipeId, index) {
                     if (!confirm('このレシピを本当に削除しますか？')) {

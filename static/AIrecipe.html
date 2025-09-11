@@ -68,7 +68,13 @@
             },
             methods: {
                 formatText(text) {
-                    return (text || '').replace(/\n/g, '<br>');
+                    if (!text) return '';
+                    if (Array.isArray(text)) {
+                        text = text.join('\n'); // 配列なら改行で結合
+                    } else if (typeof text !== 'string') {
+                        text = String(text); // 数値やオブジェクトなら文字列化
+                    }
+                    return text.replace(/\n/g, '<br>');
                 },
                 async generateRecipe() {
                     if (!this.ingredients.trim()) return;
